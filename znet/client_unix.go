@@ -6,9 +6,9 @@ import (
 	"context"
 	"errors"
 	"github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/buffer/ring"
-	"github.com/meta-apex/zenith/znet/internal/math"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	"github.com/meta-apex/zenith/znet/internal/queue"
 	"github.com/meta-apex/zenith/znet/internal/socket"
@@ -52,7 +52,7 @@ func NewClient(eh EventHandler, opts ...Option) (cli *Client, err error) {
 
 	if options.EdgeTriggeredIOChunk > 0 {
 		options.EdgeTriggeredIO = true
-		options.EdgeTriggeredIOChunk = math.CeilToPowerOfTwo(options.EdgeTriggeredIOChunk)
+		options.EdgeTriggeredIOChunk = zmath.CeilToPowerOfTwo(options.EdgeTriggeredIOChunk)
 	} else if options.EdgeTriggeredIO {
 		options.EdgeTriggeredIOChunk = 1 << 20 // 1MB
 	}
@@ -64,7 +64,7 @@ func NewClient(eh EventHandler, opts ...Option) (cli *Client, err error) {
 	case rbc <= ring.DefaultBufferSize:
 		options.ReadBufferCap = ring.DefaultBufferSize
 	default:
-		options.ReadBufferCap = math.CeilToPowerOfTwo(rbc)
+		options.ReadBufferCap = zmath.CeilToPowerOfTwo(rbc)
 	}
 	wbc := options.WriteBufferCap
 	switch {
@@ -73,7 +73,7 @@ func NewClient(eh EventHandler, opts ...Option) (cli *Client, err error) {
 	case wbc <= ring.DefaultBufferSize:
 		options.WriteBufferCap = ring.DefaultBufferSize
 	default:
-		options.WriteBufferCap = math.CeilToPowerOfTwo(wbc)
+		options.WriteBufferCap = zmath.CeilToPowerOfTwo(wbc)
 	}
 	cli.eng = &eng
 	return

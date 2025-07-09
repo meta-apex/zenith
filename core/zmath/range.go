@@ -1,4 +1,4 @@
-package mathx
+package zmath
 
 type Numerical interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64 |

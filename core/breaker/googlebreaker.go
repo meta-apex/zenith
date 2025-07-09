@@ -2,7 +2,7 @@ package breaker
 
 import (
 	"github.com/meta-apex/zenith/core/collection"
-	"github.com/meta-apex/zenith/core/mathx"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
 	"time"
@@ -24,7 +24,7 @@ type (
 	googleBreaker struct {
 		k        float64
 		stat     *collection.RollingWindow[int64, *bucket]
-		proba    *mathx.Proba
+		proba    *zmath.Proba
 		lastPass *zsync.AtomicDuration
 	}
 
@@ -44,7 +44,7 @@ func newGoogleBreaker() *googleBreaker {
 	return &googleBreaker{
 		stat:     st,
 		k:        k,
-		proba:    mathx.NewProba(),
+		proba:    zmath.NewProba(),
 		lastPass: zsync.NewAtomicDuration(),
 	}
 }
@@ -53,7 +53,7 @@ func (b *googleBreaker) accept() error {
 	var w float64
 	history := b.history()
 	w = b.k - (b.k-minK)*float64(history.failingBuckets)/buckets
-	weightedAccepts := mathx.AtLeast(w, minK) * float64(history.accepts)
+	weightedAccepts := zmath.AtLeast(w, minK) * float64(history.accepts)
 	// https://landing.google.com/sre/sre-book/chapters/handling-overload/#eq2101
 	// for better performance, no need to care about the negative ratio
 	dropRatio := (float64(history.total-protection) - weightedAccepts) / float64(history.total+1)

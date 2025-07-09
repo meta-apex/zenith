@@ -3,9 +3,9 @@ package znet
 import (
 	"context"
 	"github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/buffer/ring"
-	"github.com/meta-apex/zenith/znet/internal/math"
 	"io"
 	"net"
 	"runtime"
@@ -501,7 +501,7 @@ func createListeners(addrs []string, opts ...Option) ([]*listener, *Options, err
 
 	if options.EdgeTriggeredIOChunk > 0 {
 		options.EdgeTriggeredIO = true
-		options.EdgeTriggeredIOChunk = math.CeilToPowerOfTwo(options.EdgeTriggeredIOChunk)
+		options.EdgeTriggeredIOChunk = zmath.CeilToPowerOfTwo(options.EdgeTriggeredIOChunk)
 	} else if options.EdgeTriggeredIO {
 		options.EdgeTriggeredIOChunk = 1 << 20 // 1MB
 	}
@@ -513,7 +513,7 @@ func createListeners(addrs []string, opts ...Option) ([]*listener, *Options, err
 	case rbc <= ring.DefaultBufferSize:
 		options.ReadBufferCap = ring.DefaultBufferSize
 	default:
-		options.ReadBufferCap = math.CeilToPowerOfTwo(rbc)
+		options.ReadBufferCap = zmath.CeilToPowerOfTwo(rbc)
 	}
 	wbc := options.WriteBufferCap
 	switch {
@@ -522,7 +522,7 @@ func createListeners(addrs []string, opts ...Option) ([]*listener, *Options, err
 	case wbc <= ring.DefaultBufferSize:
 		options.WriteBufferCap = ring.DefaultBufferSize
 	default:
-		options.WriteBufferCap = math.CeilToPowerOfTwo(wbc)
+		options.WriteBufferCap = zmath.CeilToPowerOfTwo(wbc)
 	}
 
 	var hasUDP, hasUnix bool

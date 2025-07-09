@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/meta-apex/zenith/core/stat"
-	"github.com/meta-apex/zenith/core/stringx"
 	"github.com/meta-apex/zenith/core/zproc"
+	"github.com/meta-apex/zenith/core/zstring"
 	"strings"
 	"sync"
 	"time"
@@ -114,7 +114,7 @@ func NewBreaker(opts ...Option) Breaker {
 		opt(&b)
 	}
 	if len(b.name) == 0 {
-		b.name = stringx.Rand()
+		b.name = zstring.Rand()
 	}
 	b.throttle = newLoggedThrottle(b.name, newGoogleBreaker())
 

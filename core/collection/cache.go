@@ -2,7 +2,7 @@ package collection
 
 import (
 	"container/list"
-	"github.com/meta-apex/zenith/core/mathx"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/zlog"
 	"sync"
@@ -34,7 +34,7 @@ type (
 		timingWheel    *TimingWheel
 		lruCache       lru
 		barrier        zsync.SingleFlight
-		unstableExpiry mathx.Unstable
+		unstableExpiry zmath.Unstable
 		stats          *cacheStat
 	}
 )
@@ -46,7 +46,7 @@ func NewCache(expire time.Duration, opts ...CacheOption) (*Cache, error) {
 		expire:         expire,
 		lruCache:       emptyLruCache,
 		barrier:        zsync.NewSingleFlight(),
-		unstableExpiry: mathx.NewUnstable(expiryDeviation),
+		unstableExpiry: zmath.NewUnstable(expiryDeviation),
 	}
 
 	for _, opt := range opts {

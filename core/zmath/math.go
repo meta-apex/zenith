@@ -1,4 +1,4 @@
-package math
+package zmath
 
 const (
 	bitSize       = 32 << (^uint(0) >> 63)

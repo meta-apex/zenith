@@ -1,4 +1,4 @@
-package mathx
+package zmath
 
 // MaxInt returns the larger one of a and b.
 // Deprecated: use builtin max instead.

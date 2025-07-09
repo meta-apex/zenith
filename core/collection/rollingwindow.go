@@ -1,7 +1,7 @@
 package collection
 
 import (
-	"github.com/meta-apex/zenith/core/mathx"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/core/ztime"
 	"sync"
 	"time"
@@ -15,7 +15,7 @@ type (
 	}
 
 	// Numerical is the interface that restricts the numerical type.
-	Numerical = mathx.Numerical
+	Numerical = zmath.Numerical
 
 	// RollingWindowOption let callers customize the RollingWindow.
 	RollingWindowOption[T Numerical, B BucketInterface[T]] func(rollingWindow *RollingWindow[T, B])

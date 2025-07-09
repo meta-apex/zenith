@@ -2,8 +2,8 @@ package ring
 
 import (
 	"errors"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/znet/internal/bs"
-	"github.com/meta-apex/zenith/znet/internal/math"
 	bsPool "github.com/meta-apex/zenith/znet/internal/pool/byteslice"
 	"io"
 )
@@ -37,7 +37,7 @@ func New(size int) *Buffer {
 	if size == 0 {
 		return &Buffer{bs: make([][]byte, 2), isEmpty: true}
 	}
-	size = math.CeilToPowerOfTwo(size)
+	size = zmath.CeilToPowerOfTwo(size)
 	return &Buffer{
 		bs:      make([][]byte, 2),
 		buf:     make([]byte, size),
@@ -469,7 +469,7 @@ func (rb *Buffer) grow(newCap int) {
 		if newCap <= DefaultBufferSize {
 			newCap = DefaultBufferSize
 		} else {
-			newCap = math.CeilToPowerOfTwo(newCap)
+			newCap = zmath.CeilToPowerOfTwo(newCap)
 		}
 	} else {
 		doubleCap := n + n

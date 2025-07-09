@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/meta-apex/zenith/core/collection"
-	"github.com/meta-apex/zenith/core/mathx"
 	"github.com/meta-apex/zenith/core/stat"
+	"github.com/meta-apex/zenith/core/zmath"
 	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
 	"github.com/meta-apex/zenith/zlog"
@@ -163,7 +163,7 @@ func (as *adaptiveShedder) maxFlight() float64 {
 	// minRT = min average response time in milliseconds
 	// allowedFlying = maxQPS * minRT / milliseconds_per_second
 	maxFlight := float64(as.maxPass()) * as.minRt() * as.windowScale
-	return mathx.AtLeast(maxFlight, 1)
+	return zmath.AtLeast(maxFlight, 1)
 }
 
 func (as *adaptiveShedder) maxPass() int64 {
@@ -201,7 +201,7 @@ func (as *adaptiveShedder) overloadFactor() float64 {
 	// as.cpuThreshold must be less than cpuMax
 	factor := (cpuMax - float64(stat.CpuUsage())) / (cpuMax - float64(as.cpuThreshold))
 	// at least accept 10% of acceptable requests, even cpu is highly overloaded.
-	return mathx.Between(factor, overloadFactorLowerBound, 1)
+	return zmath.Between(factor, overloadFactorLowerBound, 1)
 }
 
 func (as *adaptiveShedder) shouldDrop() bool {

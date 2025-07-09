@@ -1,4 +1,4 @@
-package stringx
+package zstring
 
 import (
 	crand "crypto/rand"
