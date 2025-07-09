@@ -46,7 +46,7 @@ func Default() *Pool {
 		Nonblocking:    Nonblocking,
 		Logger:         &antsLogger{zlog.GetDefaultLogger().WithName("gopool")},
 		PanicHandler: func(a any) {
-			zlog.Error().Msgf("goroutine pool panic: %v", a)
+			zlog.Error().Msgf("gopool panic: %v", a)
 		},
 	}
 
