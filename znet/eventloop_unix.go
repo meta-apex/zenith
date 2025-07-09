@@ -136,8 +136,8 @@ func (el *eventloop) enroll(c net.Conn, addr net.Addr, ctx any) (resCh chan Regi
 		}
 
 		var (
-			sockAddr unix.Sockaddr
 			gc       *conn
+			sockAddr unix.Sockaddr
 		)
 		switch c.(type) {
 		case *net.UnixConn:
