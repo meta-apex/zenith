@@ -2,9 +2,9 @@ package znet
 
 import (
 	"context"
+	errorx "github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/buffer/ring"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	"github.com/meta-apex/zenith/znet/internal/math"
 	"io"
 	"net"

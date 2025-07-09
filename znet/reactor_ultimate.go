@@ -4,7 +4,7 @@ package znet
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
+	errorx "github.com/meta-apex/zenith/core/zerror"
 	"runtime"
 )
 

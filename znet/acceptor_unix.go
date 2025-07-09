@@ -3,7 +3,7 @@
 package znet
 
 import (
-	"github.com/meta-apex/zenith/znet/internal/errors"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	"github.com/meta-apex/zenith/znet/internal/queue"
 	"github.com/meta-apex/zenith/znet/internal/socket"
@@ -26,7 +26,7 @@ func (el *eventloop) accept0(fd int, _ netpoll.IOEvent, _ netpoll.IOFlags) error
 			continue
 		default:
 			el.getLogger().Error().Msgf("Accept() failed due to error: %v", err)
-			return errors.ErrAcceptSocket
+			return zerror.ErrAcceptSocket
 		}
 
 		remoteAddr := socket.SockaddrToTCPOrUnixAddr(sa)
@@ -75,7 +75,7 @@ func (el *eventloop) accept(fd int, ev netpoll.IOEvent, flags netpoll.IOFlags) e
 		return nil
 	default:
 		el.getLogger().Error().Msgf("Accept() failed due to error: %v", err)
-		return errors.ErrAcceptSocket
+		return zerror.ErrAcceptSocket
 	}
 
 	remoteAddr := socket.SockaddrToTCPOrUnixAddr(sa)

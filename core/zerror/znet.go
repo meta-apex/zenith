@@ -1,4 +1,4 @@
-package errors
+package zerror
 
 import "errors"
 

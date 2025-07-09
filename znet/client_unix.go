@@ -5,9 +5,9 @@ package znet
 import (
 	"context"
 	"errors"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/buffer/ring"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	"github.com/meta-apex/zenith/znet/internal/math"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	"github.com/meta-apex/zenith/znet/internal/queue"
@@ -132,7 +132,7 @@ func (cli *Client) Stop() error {
 
 	// Notify all event-loops to exit.
 	cli.eng.eventLoops.iterate(func(_ int, el *eventloop) bool {
-		zlog.Error().Err(el.poller.Trigger(queue.HighPriority, func(_ any) error { return errorx.ErrEngineShutdown }, nil)).Msg("")
+		zlog.Error().Err(el.poller.Trigger(queue.HighPriority, func(_ any) error { return zerror.ErrEngineShutdown }, nil)).Msg("")
 		return true
 	})
 
@@ -243,7 +243,7 @@ func (cli *Client) EnrollContext(c net.Conn, ctx any) (Conn, error) {
 		}
 		gc = newUDPConn(dupFD, el, c.LocalAddr(), sockAddr, true)
 	default:
-		return nil, errorx.ErrUnsupportedProtocol
+		return nil, zerror.ErrUnsupportedProtocol
 	}
 	gc.ctx = ctx
 

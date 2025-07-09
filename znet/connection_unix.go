@@ -3,9 +3,9 @@
 package znet
 
 import (
+	errorx "github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/znet/internal/bs"
 	"github.com/meta-apex/zenith/znet/internal/buffer/elastic"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	gio "github.com/meta-apex/zenith/znet/internal/io"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	bsPool "github.com/meta-apex/zenith/znet/internal/pool/byteslice"

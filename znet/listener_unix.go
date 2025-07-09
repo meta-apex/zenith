@@ -17,8 +17,8 @@
 package znet
 
 import (
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	"github.com/meta-apex/zenith/znet/internal/socket"
 	"net"
@@ -61,7 +61,7 @@ func (ln *listener) normalize() (err error) {
 		_ = os.RemoveAll(ln.address)
 		ln.fd, ln.addr, err = socket.UnixSocket(ln.network, ln.address, true, ln.sockOptInts, ln.sockOptStrs)
 	default:
-		err = errorx.ErrUnsupportedProtocol
+		err = zerror.ErrUnsupportedProtocol
 	}
 	return
 }

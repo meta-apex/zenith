@@ -5,8 +5,8 @@ package znet
 import (
 	"context"
 	"errors"
+	errorx "github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	"github.com/meta-apex/zenith/znet/internal/queue"
 	"github.com/meta-apex/zenith/znet/internal/socket"

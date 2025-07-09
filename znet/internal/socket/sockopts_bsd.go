@@ -3,7 +3,7 @@
 package socket
 
 import (
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
+	errorx "github.com/meta-apex/zenith/core/zerror"
 )
 
 // SetBindToDevice is not implemented on *BSD because there is

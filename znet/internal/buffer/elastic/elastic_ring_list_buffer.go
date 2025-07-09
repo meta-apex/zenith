@@ -1,8 +1,8 @@
 package elastic
 
 import (
+	errorx "github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/znet/internal/buffer/linkedlist"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	"io"
 	"math"
 )

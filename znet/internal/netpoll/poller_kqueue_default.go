@@ -4,8 +4,8 @@ package netpoll
 
 import (
 	"errors"
+	errorx "github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
-	errorx "github.com/meta-apex/zenith/znet/internal/errors"
 	"github.com/meta-apex/zenith/znet/internal/queue"
 	"os"
 	"runtime"

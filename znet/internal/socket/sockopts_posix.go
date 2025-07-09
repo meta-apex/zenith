@@ -3,7 +3,7 @@
 package socket
 
 import (
-	"github.com/meta-apex/zenith/znet/internal/errors"
+	"github.com/meta-apex/zenith/core/zerror"
 	"net"
 	"os"
 	"syscall"
@@ -158,5 +158,5 @@ func interfaceFirstIPv4Addr(ifIndex int) (net.IP, error) {
 			return ip, nil
 		}
 	}
-	return nil, errors.ErrNoIPv4AddressOnInterface
+	return nil, zerror.ErrNoIPv4AddressOnInterface
 }
