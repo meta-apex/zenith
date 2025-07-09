@@ -1,4 +1,4 @@
-package timingwheel
+package collection
 
 import "sync"
 

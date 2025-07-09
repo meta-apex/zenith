@@ -236,6 +236,22 @@ func Panic() (e *Entry) {
 	return
 }
 
+// Stat starts a new message with panic level.
+func Stat() (e *Entry) {
+	if defaultLogger.silent(InfoLevel) {
+		return nil
+	}
+	e = defaultLogger.header(InfoLevel)
+	if caller, full := defaultLogger.Caller, false; caller != 0 {
+		if caller < 0 {
+			caller, full = -caller, true
+		}
+		var pc uintptr
+		e.caller(caller1(caller, &pc, 1, 1), pc, full)
+	}
+	return
+}
+
 // Printf sends a zlog entry without extra field. Arguments are handled in the manner of fmt.Printf.
 func Printf(format string, v ...any) {
 	e := defaultLogger.header(noLevel)
