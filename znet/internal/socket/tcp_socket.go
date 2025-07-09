@@ -4,7 +4,7 @@ package socket
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"net"
 	"os"
 
@@ -38,7 +38,7 @@ func GetTCPSockAddr(proto, addr string) (sa unix.Sockaddr, family int, tcpAddr *
 		family = unix.AF_INET6
 		sa, err = ipToSockaddr(family, tcpAddr.IP, tcpAddr.Port, tcpAddr.Zone)
 	default:
-		err = errorx.ErrUnsupportedProtocol
+		err = zerror.ErrUnsupportedProtocol
 	}
 
 	return
@@ -62,7 +62,7 @@ func determineTCPProto(proto string, addr *net.TCPAddr) (string, error) {
 		return proto, nil
 	}
 
-	return "", errorx.ErrUnsupportedTCPProtocol
+	return "", zerror.ErrUnsupportedTCPProtocol
 }
 
 // tcpSocket creates an endpoint for communication and returns a file descriptor that refers to that endpoint.

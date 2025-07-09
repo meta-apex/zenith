@@ -4,7 +4,7 @@ package znet
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"runtime"
 )
 
@@ -15,7 +15,7 @@ func (el *eventloop) rotate() error {
 	}
 
 	err := el.poller.Polling()
-	if errors.Is(err, errorx.ErrEngineShutdown) {
+	if errors.Is(err, zerror.ErrEngineShutdown) {
 		el.getLogger().Debugf("main reactor is exiting in terms of the demand from user, %v", err)
 		err = nil
 	} else if err != nil {
@@ -34,7 +34,7 @@ func (el *eventloop) orbit() error {
 	}
 
 	err := el.poller.Polling()
-	if errors.Is(err, errorx.ErrEngineShutdown) {
+	if errors.Is(err, zerror.ErrEngineShutdown) {
 		el.getLogger().Debugf("event-loop(%d) is exiting in terms of the demand from user, %v", el.idx, err)
 		err = nil
 	} else if err != nil {
@@ -54,7 +54,7 @@ func (el *eventloop) run() error {
 	}
 
 	err := el.poller.Polling()
-	if errors.Is(err, errorx.ErrEngineShutdown) {
+	if errors.Is(err, zerror.ErrEngineShutdown) {
 		el.getLogger().Debugf("event-loop(%d) is exiting in terms of the demand from user, %v", el.idx, err)
 		err = nil
 	} else if err != nil {

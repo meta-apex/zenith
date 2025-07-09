@@ -5,7 +5,7 @@ package znet
 import (
 	"context"
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
 	"github.com/meta-apex/zenith/znet/internal/queue"
@@ -38,7 +38,7 @@ func (eng *engine) isShutdown() bool {
 
 // shutdown signals the engine to shut down.
 func (eng *engine) shutdown(err error) {
-	if err != nil && !errors.Is(err, errorx.ErrEngineShutdown) {
+	if err != nil && !errors.Is(err, zerror.ErrEngineShutdown) {
 		eng.opts.Logger.Error().Msgf("engine is being shutdown with error: %v", err)
 	}
 	// Cancel the context to stop the engine.
@@ -188,14 +188,14 @@ func (eng *engine) stop(ctx context.Context, s Engine) {
 
 	// Notify all event-loops to exit.
 	eng.eventLoops.iterate(func(i int, el *eventloop) bool {
-		err := el.poller.Trigger(queue.HighPriority, func(_ any) error { return errorx.ErrEngineShutdown }, nil)
+		err := el.poller.Trigger(queue.HighPriority, func(_ any) error { return zerror.ErrEngineShutdown }, nil)
 		if err != nil {
 			eng.opts.Logger.Error().Msgf("failed to enqueue shutdown signal of high-priority for event-loop(%d): %v", i, err)
 		}
 		return true
 	})
 	if eng.ingress != nil {
-		err := eng.ingress.poller.Trigger(queue.HighPriority, func(_ any) error { return errorx.ErrEngineShutdown }, nil)
+		err := eng.ingress.poller.Trigger(queue.HighPriority, func(_ any) error { return zerror.ErrEngineShutdown }, nil)
 		if err != nil {
 			eng.opts.Logger.Error().Msgf("failed to enqueue shutdown signal of high-priority for main event-loop: %v", err)
 		}

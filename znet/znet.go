@@ -2,7 +2,7 @@ package znet
 
 import (
 	"context"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/buffer/ring"
 	"github.com/meta-apex/zenith/znet/internal/math"
@@ -44,10 +44,10 @@ type Engine struct {
 // Validate checks whether the engine is available.
 func (e Engine) Validate() error {
 	if e.eng == nil || len(e.eng.listeners) == 0 {
-		return errorx.ErrEmptyEngine
+		return zerror.ErrEmptyEngine
 	}
 	if e.eng.isShutdown() {
-		return errorx.ErrEngineInShutdown
+		return zerror.ErrEngineInShutdown
 	}
 	return nil
 }
@@ -80,7 +80,7 @@ func (e Engine) Register(ctx context.Context) (<-chan RegisteredResult, error) {
 	}
 
 	if e.eng.eventLoops.len() == 0 {
-		return nil, errorx.ErrEmptyEngine
+		return nil, zerror.ErrEmptyEngine
 	}
 
 	c, ok := FromNetConnContext(ctx)
@@ -93,7 +93,7 @@ func (e Engine) Register(ctx context.Context) (<-chan RegisteredResult, error) {
 		return e.eng.eventLoops.next(addr).Register(ctx, addr)
 	}
 
-	return nil, errorx.ErrInvalidNetworkAddress
+	return nil, zerror.ErrInvalidNetworkAddress
 }
 
 // Dup returns a copy of the underlying file descriptor of listener.
@@ -107,7 +107,7 @@ func (e Engine) Dup() (fd int, err error) {
 	}
 
 	if len(e.eng.listeners) > 1 {
-		return -1, errorx.ErrUnsupportedOp
+		return -1, zerror.ErrUnsupportedOp
 	}
 
 	for _, ln := range e.eng.listeners {
@@ -130,7 +130,7 @@ func (e Engine) DupListener(network, addr string) (int, error) {
 		}
 	}
 
-	return -1, errorx.ErrInvalidNetworkAddress
+	return -1, zerror.ErrInvalidNetworkAddress
 }
 
 // Stop gracefully shuts down this Engine without interrupting any active event-loops,
@@ -496,7 +496,7 @@ func createListeners(addrs []string, opts ...Option) ([]*listener, *Options, err
 	if options.LockOSThread && options.NumEventLoop > 10000 {
 		zlog.Error().Msgf("too many event-loops under LockOSThread mode, should be less than 10,000 while you are trying to set up %d\n",
 			options.NumEventLoop)
-		return nil, nil, errorx.ErrTooManyEventLoopThreads
+		return nil, nil, zerror.ErrTooManyEventLoopThreads
 	}
 
 	if options.EdgeTriggeredIOChunk > 0 {
@@ -635,17 +635,17 @@ func Rotate(eventHandler EventHandler, addrs []string, opts ...Option) error {
 func parseProtoAddr(protoAddr string) (string, string, error) {
 	protoAddr = strings.ToLower(protoAddr)
 	if strings.Count(protoAddr, "://") != 1 {
-		return "", "", errorx.ErrInvalidNetworkAddress
+		return "", "", zerror.ErrInvalidNetworkAddress
 	}
 	pair := strings.SplitN(protoAddr, "://", 2)
 	proto, addr := pair[0], pair[1]
 	switch proto {
 	case "tcp", "tcp4", "tcp6", "udp", "udp4", "udp6", "unix":
 	default:
-		return "", "", errorx.ErrUnsupportedProtocol
+		return "", "", zerror.ErrUnsupportedProtocol
 	}
 	if addr == "" {
-		return "", "", errorx.ErrInvalidNetworkAddress
+		return "", "", zerror.ErrInvalidNetworkAddress
 	}
 	return proto, addr, nil
 }

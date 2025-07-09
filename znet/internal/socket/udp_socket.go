@@ -4,7 +4,7 @@ package socket
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"net"
 	"os"
 
@@ -36,7 +36,7 @@ func GetUDPSockAddr(proto, addr string) (sa unix.Sockaddr, family int, udpAddr *
 		family = unix.AF_INET6
 		sa, err = ipToSockaddr(family, udpAddr.IP, udpAddr.Port, udpAddr.Zone)
 	default:
-		err = errorx.ErrUnsupportedProtocol
+		err = zerror.ErrUnsupportedProtocol
 	}
 
 	return
@@ -60,7 +60,7 @@ func determineUDPProto(proto string, addr *net.UDPAddr) (string, error) {
 		return proto, nil
 	}
 
-	return "", errorx.ErrUnsupportedUDPProtocol
+	return "", zerror.ErrUnsupportedUDPProtocol
 }
 
 // udpSocket creates an endpoint for communication and returns a file descriptor that refers to that endpoint.

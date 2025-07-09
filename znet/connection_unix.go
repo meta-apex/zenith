@@ -3,7 +3,7 @@
 package znet
 
 import (
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/znet/internal/bs"
 	"github.com/meta-apex/zenith/znet/internal/buffer/elastic"
 	gio "github.com/meta-apex/zenith/znet/internal/io"
@@ -397,12 +397,12 @@ func (c *conn) Write(p []byte) (int, error) {
 
 func (c *conn) SendTo(p []byte, addr net.Addr) (int, error) {
 	if !c.isDatagram {
-		return 0, errorx.ErrUnsupportedOp
+		return 0, zerror.ErrUnsupportedOp
 	}
 
 	sa := socket.NetAddrToSockaddr(addr)
 	if sa == nil {
-		return 0, errorx.ErrInvalidNetworkAddress
+		return 0, zerror.ErrInvalidNetworkAddress
 	}
 
 	return c.sendTo(p, sa)
@@ -410,7 +410,7 @@ func (c *conn) SendTo(p []byte, addr net.Addr) (int, error) {
 
 func (c *conn) Writev(bs [][]byte) (int, error) {
 	if c.isDatagram {
-		return 0, errorx.ErrUnsupportedOp
+		return 0, zerror.ErrUnsupportedOp
 	}
 	return c.writev(bs)
 }
@@ -469,14 +469,14 @@ func (c *conn) SetNoDelay(noDelay bool) error {
 
 func (c *conn) SetKeepAlivePeriod(d time.Duration) error {
 	if c.proto != "tcp" {
-		return errorx.ErrUnsupportedOp
+		return zerror.ErrUnsupportedOp
 	}
 	return socket.SetKeepAlivePeriod(c.fd, int(d.Seconds()))
 }
 
 func (c *conn) SetKeepAlive(enabled bool, idle, intvl time.Duration, cnt int) error {
 	if c.proto != "tcp" {
-		return errorx.ErrUnsupportedOp
+		return zerror.ErrUnsupportedOp
 	}
 	return socket.SetKeepAlive(c.fd, enabled, int(idle.Seconds()), int(intvl.Seconds()), cnt)
 }
@@ -498,7 +498,7 @@ func (c *conn) AsyncWrite(buf []byte, callback AsyncCallback) error {
 
 func (c *conn) AsyncWritev(bs [][]byte, callback AsyncCallback) error {
 	if c.isDatagram {
-		return errorx.ErrUnsupportedOp
+		return zerror.ErrUnsupportedOp
 	}
 	return c.loop.poller.Trigger(queue.HighPriority, c.asyncWritev, &asyncWritevHook{callback, bs})
 }
@@ -535,13 +535,13 @@ func (c *conn) EventLoop() EventLoop {
 }
 
 func (*conn) SetDeadline(_ time.Time) error {
-	return errorx.ErrUnsupportedOp
+	return zerror.ErrUnsupportedOp
 }
 
 func (*conn) SetReadDeadline(_ time.Time) error {
-	return errorx.ErrUnsupportedOp
+	return zerror.ErrUnsupportedOp
 }
 
 func (*conn) SetWriteDeadline(_ time.Time) error {
-	return errorx.ErrUnsupportedOp
+	return zerror.ErrUnsupportedOp
 }

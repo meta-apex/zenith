@@ -4,7 +4,7 @@ package socket
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"net"
 	"os"
 
@@ -22,7 +22,7 @@ func GetUnixSockAddr(proto, addr string) (sa unix.Sockaddr, family int, unixAddr
 	case "unix":
 		sa, family = &unix.SockaddrUnix{Name: unixAddr.Name}, unix.AF_UNIX
 	default:
-		err = errorx.ErrUnsupportedUDSProtocol
+		err = zerror.ErrUnsupportedUDSProtocol
 	}
 
 	return

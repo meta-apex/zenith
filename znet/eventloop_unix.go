@@ -6,11 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/gopool"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
 	gio "github.com/meta-apex/zenith/znet/internal/io"
 	"github.com/meta-apex/zenith/znet/internal/netpoll"
-	"github.com/meta-apex/zenith/znet/internal/pool/goroutine"
 	"github.com/meta-apex/zenith/znet/internal/queue"
 	"github.com/meta-apex/zenith/znet/internal/socket"
 	"io"
@@ -36,30 +36,30 @@ type eventloop struct {
 
 func (el *eventloop) Register(ctx context.Context, addr net.Addr) (<-chan RegisteredResult, error) {
 	if el.engine.isShutdown() {
-		return nil, errorx.ErrEngineInShutdown
+		return nil, zerror.ErrEngineInShutdown
 	}
 	if addr == nil {
-		return nil, errorx.ErrInvalidNetworkAddress
+		return nil, zerror.ErrInvalidNetworkAddress
 	}
 	return el.enroll(nil, addr, FromContext(ctx))
 }
 
 func (el *eventloop) Enroll(ctx context.Context, c net.Conn) (<-chan RegisteredResult, error) {
 	if el.engine.isShutdown() {
-		return nil, errorx.ErrEngineInShutdown
+		return nil, zerror.ErrEngineInShutdown
 	}
 	if c == nil {
-		return nil, errorx.ErrInvalidNetConn
+		return nil, zerror.ErrInvalidNetConn
 	}
 	return el.enroll(c, c.RemoteAddr(), FromContext(ctx))
 }
 
 func (el *eventloop) Execute(ctx context.Context, runnable Runnable) error {
 	if el.engine.isShutdown() {
-		return errorx.ErrEngineInShutdown
+		return zerror.ErrEngineInShutdown
 	}
 	if runnable == nil {
-		return errorx.ErrNilRunnable
+		return zerror.ErrNilRunnable
 	}
 	return el.poller.Trigger(queue.LowPriority, func(any) error {
 		return runnable.Run(ctx)
@@ -67,7 +67,7 @@ func (el *eventloop) Execute(ctx context.Context, runnable Runnable) error {
 }
 
 func (el *eventloop) Schedule(context.Context, Runnable, time.Duration) error {
-	return errorx.ErrUnsupportedOp
+	return zerror.ErrUnsupportedOp
 }
 
 func (el *eventloop) Close(c Conn) error {
@@ -97,7 +97,7 @@ type connWithCallback struct {
 
 func (el *eventloop) enroll(c net.Conn, addr net.Addr, ctx any) (resCh chan RegisteredResult, err error) {
 	resCh = make(chan RegisteredResult, 1)
-	err = goroutine.DefaultWorkerPool.Submit(func() {
+	err = gopool.DefaultWorkerPool.Submit(func() {
 		defer close(resCh)
 
 		var err error
@@ -264,7 +264,7 @@ loop:
 	case Close:
 		return el.close(c, nil)
 	case Shutdown:
-		return errorx.ErrEngineShutdown
+		return zerror.ErrEngineShutdown
 	}
 	_, _ = c.inboundBuffer.Write(c.buffer)
 	c.buffer = c.buffer[:0]
@@ -415,7 +415,7 @@ func (el *eventloop) ticker(ctx context.Context) {
 		case Shutdown:
 			// It seems reasonable to mark this as low-priority, waiting for some tasks like asynchronous writes
 			// to finish up before shutting down the service.
-			err := el.poller.Trigger(queue.LowPriority, func(_ any) error { return errorx.ErrEngineShutdown }, nil)
+			err := el.poller.Trigger(queue.LowPriority, func(_ any) error { return zerror.ErrEngineShutdown }, nil)
 			el.getLogger().Debug().Msgf("failed to enqueue shutdown signal of high-priority for event-loop(%d): %v", el.idx, err)
 		}
 		if timer == nil {
@@ -453,7 +453,7 @@ func (el *eventloop) readUDP(fd int, _ netpoll.IOEvent, _ netpoll.IOFlags) error
 		c.release()
 	}
 	if action == Shutdown {
-		return errorx.ErrEngineShutdown
+		return zerror.ErrEngineShutdown
 	}
 	return nil
 }
@@ -465,7 +465,7 @@ func (el *eventloop) handleAction(c *conn, action Action) error {
 	case Close:
 		return el.close(c, nil)
 	case Shutdown:
-		return errorx.ErrEngineShutdown
+		return zerror.ErrEngineShutdown
 	default:
 		return nil
 	}
@@ -476,7 +476,7 @@ func (el *eventloop) execCmd(a any) (err error) {
 	cmd := a.(*asyncCmd)
 	c := el.connections.getConnByGFD(cmd.fd)
 	if c == nil || c.gfd != cmd.fd {
-		return errorx.ErrInvalidConn
+		return zerror.ErrInvalidConn
 	}
 
 	defer func() {
@@ -495,7 +495,7 @@ func (el *eventloop) execCmd(a any) (err error) {
 	case asyncCmdWritev:
 		_, err = c.Writev(cmd.param.([][]byte))
 	default:
-		return errorx.ErrUnsupportedOp
+		return zerror.ErrUnsupportedOp
 	}
 	return
 }

@@ -1,4 +1,4 @@
-package goroutine
+package gopool
 
 import (
 	"github.com/meta-apex/zenith/zlog"
@@ -44,7 +44,7 @@ func Default() *Pool {
 	options := ants.Options{
 		ExpiryDuration: ExpiryDuration,
 		Nonblocking:    Nonblocking,
-		Logger:         &antsLogger{zlog.GetDefaultLogger().WithName("ants")},
+		Logger:         &antsLogger{zlog.GetDefaultLogger().WithName("gopool")},
 		PanicHandler: func(a any) {
 			zlog.Error().Msgf("goroutine pool panic: %v", a)
 		},

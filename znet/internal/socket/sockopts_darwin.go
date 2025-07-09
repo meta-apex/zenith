@@ -2,7 +2,7 @@ package socket
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"os"
 
 	"golang.org/x/sys/unix"
@@ -58,5 +58,5 @@ func SetKeepAlive(fd int, enabled bool, idle, intvl, cnt int) error {
 // SetBindToDevice is not implemented on macOS because there is
 // no equivalent of Linux's SO_BINDTODEVICE.
 func SetBindToDevice(_ int, _ string) error {
-	return errorx.ErrUnsupportedOp
+	return zerror.ErrUnsupportedOp
 }

@@ -4,7 +4,7 @@ package netpoll
 
 import (
 	"errors"
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/meta-apex/zenith/znet/internal/queue"
 	"os"
@@ -119,7 +119,7 @@ func (p *Poller) Polling(callback PollEventHandler) error {
 				doChores = true
 			} else {
 				err = callback(fd, ev.Events, 0)
-				if errors.Is(err, errorx.ErrAcceptSocket) || errors.Is(err, errorx.ErrEngineShutdown) {
+				if errors.Is(err, zerror.ErrAcceptSocket) || errors.Is(err, zerror.ErrEngineShutdown) {
 					return err
 				}
 			}
@@ -130,7 +130,7 @@ func (p *Poller) Polling(callback PollEventHandler) error {
 			task := p.urgentAsyncTaskQueue.Dequeue()
 			for ; task != nil; task = p.urgentAsyncTaskQueue.Dequeue() {
 				err = task.Exec(task.Param)
-				if errors.Is(err, errorx.ErrEngineShutdown) {
+				if errors.Is(err, zerror.ErrEngineShutdown) {
 					return err
 				}
 				queue.PutTask(task)
@@ -140,7 +140,7 @@ func (p *Poller) Polling(callback PollEventHandler) error {
 					break
 				}
 				err = task.Exec(task.Param)
-				if errors.Is(err, errorx.ErrEngineShutdown) {
+				if errors.Is(err, zerror.ErrEngineShutdown) {
 					return err
 				}
 				queue.PutTask(task)

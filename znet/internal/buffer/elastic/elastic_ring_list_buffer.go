@@ -1,7 +1,7 @@
 package elastic
 
 import (
-	errorx "github.com/meta-apex/zenith/core/zerror"
+	"github.com/meta-apex/zenith/core/zerror"
 	"github.com/meta-apex/zenith/znet/internal/buffer/linkedlist"
 	"io"
 	"math"
@@ -20,7 +20,7 @@ type Buffer struct {
 // New instantiates an elastic.Buffer and returns it.
 func New(maxStaticBytes int) (*Buffer, error) {
 	if maxStaticBytes <= 0 {
-		return nil, errorx.ErrNegativeSize
+		return nil, zerror.ErrNegativeSize
 	}
 	return &Buffer{maxStaticBytes: maxStaticBytes}, nil
 }
