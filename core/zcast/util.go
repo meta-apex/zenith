@@ -1,4 +1,4 @@
-package cast
+package zcast
 
 // Placeholder is a placeholder object that can be used globally.
 var Placeholder PlaceholderType
