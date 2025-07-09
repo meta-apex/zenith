@@ -117,7 +117,7 @@ func initializeOnce() {
 		defer func() {
 			if p := recover(); p != nil {
 				noCgroup = true
-				zlog.Error().Err(p).Msg("")
+				zlog.Error().Err(p.(error)).Msg("")
 			}
 		}()
 
