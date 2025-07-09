@@ -1,20 +1,20 @@
 package zsync
 
 import (
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"sync"
 )
 
 // A DoneChan is used as a channel that can be closed multiple times and wait for done.
 type DoneChan struct {
-	done chan zcast.PlaceholderType
+	done chan cast.PlaceholderType
 	once sync.Once
 }
 
 // NewDoneChan returns a DoneChan.
 func NewDoneChan() *DoneChan {
 	return &DoneChan{
-		done: make(chan zcast.PlaceholderType),
+		done: make(chan cast.PlaceholderType),
 	}
 }
 
@@ -26,6 +26,6 @@ func (dc *DoneChan) Close() {
 }
 
 // Done returns a channel that can be notified on dc closed.
-func (dc *DoneChan) Done() chan zcast.PlaceholderType {
+func (dc *DoneChan) Done() chan cast.PlaceholderType {
 	return dc.done
 }

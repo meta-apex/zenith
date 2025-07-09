@@ -3,7 +3,7 @@ package trace
 import (
 	"context"
 	"fmt"
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"github.com/meta-apex/zenith/zlog"
 	"net/url"
 	"os"
@@ -30,7 +30,7 @@ const (
 )
 
 var (
-	agents = make(map[string]zcast.PlaceholderType)
+	agents = make(map[string]cast.PlaceholderType)
 	lock   sync.Mutex
 	tp     *sdktrace.TracerProvider
 )
@@ -54,7 +54,7 @@ func StartAgent(c Config) {
 		return
 	}
 
-	agents[c.Endpoint] = zcast.Placeholder
+	agents[c.Endpoint] = cast.Placeholder
 }
 
 // StopAgent shuts down the span processors in the order they were registered.

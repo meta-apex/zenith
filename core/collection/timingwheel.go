@@ -4,8 +4,8 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"github.com/meta-apex/zenith/core/cast"
 	"github.com/meta-apex/zenith/core/threading"
-	"github.com/meta-apex/zenith/core/zcast"
 	"github.com/meta-apex/zenith/core/ztime"
 	"time"
 )
@@ -34,7 +34,7 @@ type (
 		moveChannel   chan baseEntry
 		removeChannel chan any
 		drainChannel  chan func(key, value any)
-		stopChannel   chan zcast.PlaceholderType
+		stopChannel   chan cast.PlaceholderType
 	}
 
 	timingEntry struct {
@@ -86,7 +86,7 @@ func NewTimingWheelWithTicker(interval time.Duration, numSlots int, execute Exec
 		moveChannel:   make(chan baseEntry),
 		removeChannel: make(chan any),
 		drainChannel:  make(chan func(key, value any)),
-		stopChannel:   make(chan zcast.PlaceholderType),
+		stopChannel:   make(chan cast.PlaceholderType),
 	}
 
 	tw.initSlots()

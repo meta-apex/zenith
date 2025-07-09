@@ -1,4 +1,4 @@
-package zcast
+package cast
 
 import (
 	"fmt"

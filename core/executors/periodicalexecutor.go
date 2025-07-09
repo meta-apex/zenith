@@ -1,8 +1,8 @@
 package executors
 
 import (
+	"github.com/meta-apex/zenith/core/cast"
 	"github.com/meta-apex/zenith/core/threading"
-	"github.com/meta-apex/zenith/core/zcast"
 	"github.com/meta-apex/zenith/core/zproc"
 	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
@@ -35,7 +35,7 @@ type (
 		waitGroup sync.WaitGroup
 		// avoid race condition on waitGroup when calling wg.Add/Done/Wait(...)
 		wgBarrier   zsync.Barrier
-		confirmChan chan zcast.PlaceholderType
+		confirmChan chan cast.PlaceholderType
 		inflight    int32
 		guarded     bool
 		newTicker   func(duration time.Duration) ztime.Ticker
@@ -50,7 +50,7 @@ func NewPeriodicalExecutor(interval time.Duration, container TaskContainer) *Per
 		commander:   make(chan any, 1),
 		interval:    interval,
 		container:   container,
-		confirmChan: make(chan zcast.PlaceholderType),
+		confirmChan: make(chan cast.PlaceholderType),
 		newTicker: func(d time.Duration) ztime.Ticker {
 			return ztime.NewTicker(d)
 		},
@@ -130,7 +130,7 @@ func (pe *PeriodicalExecutor) backgroundFlush() {
 				commanded = true
 				atomic.AddInt32(&pe.inflight, -1)
 				pe.enterExecution()
-				pe.confirmChan <- zcast.Placeholder
+				pe.confirmChan <- cast.Placeholder
 				pe.executeTasks(vals)
 				last = ztime.Now()
 			case <-ticker.Chan():

@@ -2,8 +2,8 @@ package threading
 
 import (
 	"errors"
+	"github.com/meta-apex/zenith/core/cast"
 	"github.com/meta-apex/zenith/core/rescue"
-	"github.com/meta-apex/zenith/core/zcast"
 	"sync"
 )
 
@@ -12,14 +12,14 @@ var ErrTaskRunnerBusy = errors.New("task runner is busy")
 
 // A TaskRunner is used to control the concurrency of goroutines.
 type TaskRunner struct {
-	limitChan chan zcast.PlaceholderType
+	limitChan chan cast.PlaceholderType
 	waitGroup sync.WaitGroup
 }
 
 // NewTaskRunner returns a TaskRunner.
 func NewTaskRunner(concurrency int) *TaskRunner {
 	return &TaskRunner{
-		limitChan: make(chan zcast.PlaceholderType, concurrency),
+		limitChan: make(chan cast.PlaceholderType, concurrency),
 	}
 }
 
@@ -30,7 +30,7 @@ func (rp *TaskRunner) Schedule(task func()) {
 	// then the wait returns, and the task is then scheduled to run, but caller thinks all tasks are done.
 	// the same reason for ScheduleImmediately.
 	rp.waitGroup.Add(1)
-	rp.limitChan <- zcast.Placeholder
+	rp.limitChan <- cast.Placeholder
 
 	go func() {
 		defer rescue.Recover(func() {
@@ -48,7 +48,7 @@ func (rp *TaskRunner) ScheduleImmediately(task func()) error {
 	// Why we add waitGroup first, check the comment in Schedule.
 	rp.waitGroup.Add(1)
 	select {
-	case rp.limitChan <- zcast.Placeholder:
+	case rp.limitChan <- cast.Placeholder:
 	default:
 		rp.waitGroup.Done()
 		return ErrTaskRunnerBusy

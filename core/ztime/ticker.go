@@ -2,7 +2,7 @@ package ztime
 
 import (
 	"errors"
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"time"
 )
 
@@ -26,7 +26,7 @@ type (
 
 	fakeTicker struct {
 		c    chan time.Time
-		done chan zcast.PlaceholderType
+		done chan cast.PlaceholderType
 	}
 
 	realTicker struct {
@@ -49,7 +49,7 @@ func (rt *realTicker) Chan() <-chan time.Time {
 func NewFakeTicker() FakeTicker {
 	return &fakeTicker{
 		c:    make(chan time.Time, 1),
-		done: make(chan zcast.PlaceholderType, 1),
+		done: make(chan cast.PlaceholderType, 1),
 	}
 }
 
@@ -58,7 +58,7 @@ func (ft *fakeTicker) Chan() <-chan time.Time {
 }
 
 func (ft *fakeTicker) Done() {
-	ft.done <- zcast.Placeholder
+	ft.done <- cast.Placeholder
 }
 
 func (ft *fakeTicker) Stop() {

@@ -1,20 +1,20 @@
 package zsync
 
 import (
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"github.com/meta-apex/zenith/core/ztime"
 	"time"
 )
 
 // A Cond is used to wait for conditions.
 type Cond struct {
-	signal chan zcast.PlaceholderType
+	signal chan cast.PlaceholderType
 }
 
 // NewCond returns a Cond.
 func NewCond() *Cond {
 	return &Cond{
-		signal: make(chan zcast.PlaceholderType),
+		signal: make(chan cast.PlaceholderType),
 	}
 }
 
@@ -42,7 +42,7 @@ func (cond *Cond) Wait() {
 // Signal wakes one goroutine waiting on c, if there is any.
 func (cond *Cond) Signal() {
 	select {
-	case cond.signal <- zcast.Placeholder:
+	case cond.signal <- cast.Placeholder:
 	default:
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"math"
 	"os"
 	"path"
@@ -259,7 +259,7 @@ func parseUints(val string) ([]uint64, error) {
 	}
 
 	var sets []uint64
-	ints := make(map[uint64]zcast.PlaceholderType)
+	ints := make(map[uint64]cast.PlaceholderType)
 	cols := strings.Split(val, ",")
 	for _, r := range cols {
 		if strings.Contains(r, "-") {
@@ -280,7 +280,7 @@ func parseUints(val string) ([]uint64, error) {
 
 			for i := minimum; i <= maximum; i++ {
 				if _, ok := ints[i]; !ok {
-					ints[i] = zcast.Placeholder
+					ints[i] = cast.Placeholder
 					sets = append(sets, i)
 				}
 			}
@@ -291,7 +291,7 @@ func parseUints(val string) ([]uint64, error) {
 			}
 
 			if _, ok := ints[v]; !ok {
-				ints[v] = zcast.Placeholder
+				ints[v] = cast.Placeholder
 				sets = append(sets, v)
 			}
 		}

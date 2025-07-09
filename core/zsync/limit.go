@@ -2,7 +2,7 @@ package zsync
 
 import (
 	"errors"
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 )
 
 // ErrLimitReturn indicates that the more than borrowed elements were returned.
@@ -10,19 +10,19 @@ var ErrLimitReturn = errors.New("discarding limited token, resource pool is full
 
 // Limit controls the concurrent requests.
 type Limit struct {
-	pool chan zcast.PlaceholderType
+	pool chan cast.PlaceholderType
 }
 
 // NewLimit creates a Limit that can borrow n elements from it concurrently.
 func NewLimit(n int) Limit {
 	return Limit{
-		pool: make(chan zcast.PlaceholderType, n),
+		pool: make(chan cast.PlaceholderType, n),
 	}
 }
 
 // Borrow borrows an element from Limit in blocking mode.
 func (l Limit) Borrow() {
-	l.pool <- zcast.Placeholder
+	l.pool <- cast.Placeholder
 }
 
 // Return returns the borrowed resource, returns error only if returned more than borrowed.
@@ -39,7 +39,7 @@ func (l Limit) Return() error {
 // If success, true returned, false for otherwise.
 func (l Limit) TryBorrow() bool {
 	select {
-	case l.pool <- zcast.Placeholder:
+	case l.pool <- cast.Placeholder:
 		return true
 	default:
 		return false

@@ -1,7 +1,7 @@
 package collection
 
 import (
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"github.com/meta-apex/zenith/zlog"
 )
 
@@ -17,14 +17,14 @@ const (
 
 // Set is not thread-safe, for concurrent use, make sure to use it with synchronization.
 type Set struct {
-	data map[any]zcast.PlaceholderType
+	data map[any]cast.PlaceholderType
 	tp   int
 }
 
 // NewSet returns a managed Set, can only put the values with the same type.
 func NewSet() *Set {
 	return &Set{
-		data: make(map[any]zcast.PlaceholderType),
+		data: make(map[any]cast.PlaceholderType),
 		tp:   untyped,
 	}
 }
@@ -32,7 +32,7 @@ func NewSet() *Set {
 // NewUnmanagedSet returns an unmanaged Set, which can put values with different types.
 func NewUnmanagedSet() *Set {
 	return &Set{
-		data: make(map[any]zcast.PlaceholderType),
+		data: make(map[any]cast.PlaceholderType),
 		tp:   unmanaged,
 	}
 }
@@ -186,7 +186,7 @@ func (s *Set) add(i any) {
 	default:
 		s.validate(i)
 	}
-	s.data[i] = zcast.Placeholder
+	s.data[i] = cast.Placeholder
 }
 
 func (s *Set) setType(i any) {

@@ -2,7 +2,7 @@ package hash
 
 import (
 	"fmt"
-	"github.com/meta-apex/zenith/core/zcast"
+	"github.com/meta-apex/zenith/core/cast"
 	"sort"
 	"strconv"
 	"sync"
@@ -26,7 +26,7 @@ type (
 		replicas int
 		keys     []uint64
 		ring     map[uint64][]any
-		nodes    map[string]zcast.PlaceholderType
+		nodes    map[string]cast.PlaceholderType
 		lock     sync.RWMutex
 	}
 )
@@ -50,7 +50,7 @@ func NewCustomConsistentHash(replicas int, fn Func) *ConsistentHash {
 		hashFunc: fn,
 		replicas: replicas,
 		ring:     make(map[uint64][]any),
-		nodes:    make(map[string]zcast.PlaceholderType),
+		nodes:    make(map[string]cast.PlaceholderType),
 	}
 }
 
@@ -164,7 +164,7 @@ func (h *ConsistentHash) removeRingNode(hash uint64, nodeRepr string) {
 }
 
 func (h *ConsistentHash) addNode(nodeRepr string) {
-	h.nodes[nodeRepr] = zcast.Placeholder
+	h.nodes[nodeRepr] = cast.Placeholder
 }
 
 func (h *ConsistentHash) containsNode(nodeRepr string) bool {
@@ -181,5 +181,5 @@ func innerRepr(node any) string {
 }
 
 func repr(node any) string {
-	return zcast.Repr(node)
+	return cast.Repr(node)
 }
