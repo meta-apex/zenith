@@ -6,7 +6,7 @@ import (
 	"github.com/meta-apex/zenith/core/collection"
 	"github.com/meta-apex/zenith/core/mathx"
 	"github.com/meta-apex/zenith/core/stat"
-	"github.com/meta-apex/zenith/core/syncx"
+	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
 	"github.com/meta-apex/zenith/zlog"
 	"math"
@@ -33,9 +33,9 @@ var (
 	ErrServiceOverloaded = errors.New("service overloaded")
 
 	// default to be enabled
-	enabled = syncx.ForAtomicBool(true)
+	enabled = zsync.ForAtomicBool(true)
 	// default to be enabled
-	logEnabled = syncx.ForAtomicBool(true)
+	logEnabled = zsync.ForAtomicBool(true)
 	// make it a variable for unit test
 	systemOverloadChecker = func(cpuThreshold int64) bool {
 		return stat.CpuUsage() >= cpuThreshold
@@ -72,9 +72,9 @@ type (
 		windowScale     float64
 		flying          int64
 		avgFlying       float64
-		avgFlyingLock   syncx.SpinLock
-		overloadTime    *syncx.AtomicDuration
-		droppedRecently *syncx.AtomicBool
+		avgFlyingLock   zsync.SpinLock
+		overloadTime    *zsync.AtomicDuration
+		droppedRecently *zsync.AtomicBool
 		passCounter     *collection.RollingWindow[int64, *collection.Bucket[int64]]
 		rtCounter       *collection.RollingWindow[int64, *collection.Bucket[int64]]
 	}
@@ -112,8 +112,8 @@ func NewAdaptiveShedder(opts ...ShedderOption) Shedder {
 	return &adaptiveShedder{
 		cpuThreshold:    options.cpuThreshold,
 		windowScale:     float64(time.Second) / float64(bucketDuration) / millisecondsPerSecond,
-		overloadTime:    syncx.NewAtomicDuration(),
-		droppedRecently: syncx.NewAtomicBool(),
+		overloadTime:    zsync.NewAtomicDuration(),
+		droppedRecently: zsync.NewAtomicBool(),
 		passCounter:     collection.NewRollingWindow[int64, *collection.Bucket[int64]](newBucket, options.buckets, bucketDuration, collection.IgnoreCurrentBucket[int64, *collection.Bucket[int64]]()),
 		rtCounter:       collection.NewRollingWindow[int64, *collection.Bucket[int64]](newBucket, options.buckets, bucketDuration, collection.IgnoreCurrentBucket[int64, *collection.Bucket[int64]]()),
 	}

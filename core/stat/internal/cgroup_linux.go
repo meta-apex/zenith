@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meta-apex/zenith/core/iox"
+	"github.com/meta-apex/zenith/core/zio"
 	"golang.org/x/sys/unix"
 )
 
@@ -68,7 +68,7 @@ func (c *cgroupV1) cpuQuota() (float64, error) {
 }
 
 func (c *cgroupV1) cpuPeriodUs() (uint64, error) {
-	data, err := iox.ReadText(path.Join(c.cgroups["cpu"], "cpu.cfs_period_us"))
+	data, err := zio.ReadText(path.Join(c.cgroups["cpu"], "cpu.cfs_period_us"))
 	if err != nil {
 		return 0, err
 	}
@@ -77,7 +77,7 @@ func (c *cgroupV1) cpuPeriodUs() (uint64, error) {
 }
 
 func (c *cgroupV1) cpuQuotaUs() (int64, error) {
-	data, err := iox.ReadText(path.Join(c.cgroups["cpu"], "cpu.cfs_quota_us"))
+	data, err := zio.ReadText(path.Join(c.cgroups["cpu"], "cpu.cfs_quota_us"))
 	if err != nil {
 		return 0, err
 	}
@@ -86,7 +86,7 @@ func (c *cgroupV1) cpuQuotaUs() (int64, error) {
 }
 
 func (c *cgroupV1) cpuUsage() (uint64, error) {
-	data, err := iox.ReadText(path.Join(c.cgroups["cpuacct"], "cpuacct.usage"))
+	data, err := zio.ReadText(path.Join(c.cgroups["cpuacct"], "cpuacct.usage"))
 	if err != nil {
 		return 0, err
 	}
@@ -95,7 +95,7 @@ func (c *cgroupV1) cpuUsage() (uint64, error) {
 }
 
 func (c *cgroupV1) effectiveCpus() (int, error) {
-	data, err := iox.ReadText(path.Join(c.cgroups["cpuset"], "cpuset.cpus"))
+	data, err := zio.ReadText(path.Join(c.cgroups["cpuset"], "cpuset.cpus"))
 	if err != nil {
 		return 0, err
 	}
@@ -113,7 +113,7 @@ type cgroupV2 struct {
 }
 
 func (c *cgroupV2) cpuQuota() (float64, error) {
-	data, err := iox.ReadText(cpuMaxFile)
+	data, err := zio.ReadText(cpuMaxFile)
 	if err != nil {
 		return 0, err
 	}
@@ -150,7 +150,7 @@ func (c *cgroupV2) cpuUsage() (uint64, error) {
 }
 
 func (c *cgroupV2) effectiveCpus() (int, error) {
-	data, err := iox.ReadText(cpusetFile)
+	data, err := zio.ReadText(cpusetFile)
 	if err != nil {
 		return 0, err
 	}
@@ -165,7 +165,7 @@ func (c *cgroupV2) effectiveCpus() (int, error) {
 
 func currentCgroupV1() (cgroup, error) {
 	cgroupFile := fmt.Sprintf("/proc/%d/cgroup", os.Getpid())
-	lines, err := iox.ReadTextLines(cgroupFile, iox.WithoutBlank())
+	lines, err := zio.ReadTextLines(cgroupFile, zio.WithoutBlank())
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +197,7 @@ func currentCgroupV1() (cgroup, error) {
 }
 
 func currentCgroupV2() (cgroup, error) {
-	lines, err := iox.ReadTextLines(cpuStatFile, iox.WithoutBlank())
+	lines, err := zio.ReadTextLines(cpuStatFile, zio.WithoutBlank())
 	if err != nil {
 		return nil, err
 	}

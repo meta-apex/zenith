@@ -2,8 +2,8 @@ package prometheus
 
 import (
 	"fmt"
-	"github.com/meta-apex/zenith/core/syncx"
 	"github.com/meta-apex/zenith/core/threading"
+	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/zlog"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 
 var (
 	once    sync.Once
-	enabled syncx.AtomicBool
+	enabled zsync.AtomicBool
 )
 
 // Enabled returns if prometheus is enabled.

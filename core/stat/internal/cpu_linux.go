@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meta-apex/zenith/core/iox"
+	"github.com/meta-apex/zenith/core/zio"
 	"github.com/meta-apex/zenith/zlog"
 )
 
@@ -129,7 +129,7 @@ func initializeOnce() {
 }
 
 func systemCpuUsage() (uint64, error) {
-	lines, err := iox.ReadTextLines(statFile, iox.WithoutBlank())
+	lines, err := zio.ReadTextLines(statFile, zio.WithoutBlank())
 	if err != nil {
 		return 0, err
 	}

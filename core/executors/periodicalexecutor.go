@@ -1,10 +1,10 @@
 package executors
 
 import (
-	"github.com/meta-apex/zenith/core/syncx"
 	"github.com/meta-apex/zenith/core/threading"
 	"github.com/meta-apex/zenith/core/zcast"
 	"github.com/meta-apex/zenith/core/zproc"
+	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
 	"reflect"
 	"sync"
@@ -34,7 +34,7 @@ type (
 		container TaskContainer
 		waitGroup sync.WaitGroup
 		// avoid race condition on waitGroup when calling wg.Add/Done/Wait(...)
-		wgBarrier   syncx.Barrier
+		wgBarrier   zsync.Barrier
 		confirmChan chan zcast.PlaceholderType
 		inflight    int32
 		guarded     bool

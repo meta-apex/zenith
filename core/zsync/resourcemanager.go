@@ -1,4 +1,4 @@
-package syncx
+package zsync
 
 import (
 	"github.com/meta-apex/zenith/core/zerror"

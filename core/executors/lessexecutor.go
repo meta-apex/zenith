@@ -1,7 +1,7 @@
 package executors
 
 import (
-	"github.com/meta-apex/zenith/core/syncx"
+	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
 	"time"
 )
@@ -9,14 +9,14 @@ import (
 // A LessExecutor is an executor to limit execution once within given time interval.
 type LessExecutor struct {
 	threshold time.Duration
-	lastTime  *syncx.AtomicDuration
+	lastTime  *zsync.AtomicDuration
 }
 
 // NewLessExecutor returns a LessExecutor with given threshold as time interval.
 func NewLessExecutor(threshold time.Duration) *LessExecutor {
 	return &LessExecutor{
 		threshold: threshold,
-		lastTime:  syncx.NewAtomicDuration(),
+		lastTime:  zsync.NewAtomicDuration(),
 	}
 }
 

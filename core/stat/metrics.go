@@ -2,7 +2,7 @@ package stat
 
 import (
 	"github.com/meta-apex/zenith/core/executors"
-	"github.com/meta-apex/zenith/core/syncx"
+	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/zlog"
 	"os"
 	"sync"
@@ -13,7 +13,7 @@ var (
 	logInterval  = time.Minute
 	writerLock   sync.Mutex
 	reportWriter Writer = nil
-	logEnabled          = syncx.ForAtomicBool(true)
+	logEnabled          = zsync.ForAtomicBool(true)
 )
 
 type (

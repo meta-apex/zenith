@@ -2,7 +2,7 @@ package health
 
 import (
 	"fmt"
-	"github.com/meta-apex/zenith/core/syncx"
+	"github.com/meta-apex/zenith/core/zsync"
 	"net/http"
 	"strings"
 	"sync"
@@ -26,7 +26,7 @@ type (
 
 	// healthManager manage app healthy.
 	healthManager struct {
-		ready syncx.AtomicBool
+		ready zsync.AtomicBool
 		name  string
 	}
 

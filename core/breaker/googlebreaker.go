@@ -3,7 +3,7 @@ package breaker
 import (
 	"github.com/meta-apex/zenith/core/collection"
 	"github.com/meta-apex/zenith/core/mathx"
-	"github.com/meta-apex/zenith/core/syncx"
+	"github.com/meta-apex/zenith/core/zsync"
 	"github.com/meta-apex/zenith/core/ztime"
 	"time"
 )
@@ -25,7 +25,7 @@ type (
 		k        float64
 		stat     *collection.RollingWindow[int64, *bucket]
 		proba    *mathx.Proba
-		lastPass *syncx.AtomicDuration
+		lastPass *zsync.AtomicDuration
 	}
 
 	windowResult struct {
@@ -45,7 +45,7 @@ func newGoogleBreaker() *googleBreaker {
 		stat:     st,
 		k:        k,
 		proba:    mathx.NewProba(),
-		lastPass: syncx.NewAtomicDuration(),
+		lastPass: zsync.NewAtomicDuration(),
 	}
 }
 

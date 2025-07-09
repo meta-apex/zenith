@@ -1,21 +1,21 @@
 package load
 
 import (
-	"github.com/meta-apex/zenith/core/syncx"
+	"github.com/meta-apex/zenith/core/zsync"
 	"io"
 )
 
 // A ShedderGroup is a manager to manage key-based shedders.
 type ShedderGroup struct {
 	options []ShedderOption
-	manager *syncx.ResourceManager
+	manager *zsync.ResourceManager
 }
 
 // NewShedderGroup returns a ShedderGroup.
 func NewShedderGroup(opts ...ShedderOption) *ShedderGroup {
 	return &ShedderGroup{
 		options: opts,
-		manager: syncx.NewResourceManager(),
+		manager: zsync.NewResourceManager(),
 	}
 }
 

@@ -1,4 +1,4 @@
-package sysx
+package zsys
 
 import "go.uber.org/automaxprocs/maxprocs"
 
