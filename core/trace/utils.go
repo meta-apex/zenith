@@ -54,8 +54,8 @@ func PeerAttr(addr string) []attribute.KeyValue {
 	}
 
 	return []attribute.KeyValue{
-		semconv.NetPeerIPKey.String(host),
-		semconv.NetPeerPortKey.String(port),
+		semconv.NetworkPeerAddressKey.String(host),
+		semconv.NetworkPeerPortKey.String(port),
 	}
 }
 

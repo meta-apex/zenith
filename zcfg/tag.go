@@ -9,14 +9,16 @@ import (
 
 // tagOptions represents the parsed tag options
 type tagOptions struct {
-	hasDefault   bool
-	defaultValue any
-	hasRange     bool
-	rangeMin     int64
-	rangeMax     int64
-	hasOptions   bool
-	options      []string
-	optional     bool
+	path           string
+	hasDefault     bool
+	defaultValue   any
+	hasRange       bool
+	rangeMin       int64
+	rangeMax       int64
+	hasOptions     bool
+	options        []string
+	optional       bool
+	parentOptional bool
 }
 
 // parseTag parses a struct tag

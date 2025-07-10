@@ -2,8 +2,6 @@ package devserver
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/meta-apex/zenith/core/prometheus"
 	"github.com/meta-apex/zenith/core/threading"
 	"github.com/meta-apex/zenith/internal/health"
 	"github.com/meta-apex/zenith/zlog"
@@ -42,8 +40,6 @@ func (s *Server) addRoutes(c Config) {
 
 	// metrics
 	if s.config.EnableMetrics {
-		// enable prometheus global switch
-		prometheus.Enable()
 		s.handleFunc(s.config.MetricsPath, promhttp.Handler().ServeHTTP)
 	}
 
@@ -66,9 +62,8 @@ func (s *Server) handleFunc(pattern string, handler http.HandlerFunc) {
 func (s *Server) StartAsync(c Config) {
 	s.addRoutes(c)
 	threading.GoSafe(func() {
-		addr := fmt.Sprintf("%s:%d", s.config.Host, s.config.Port)
-		zlog.Info().Msgf("Starting dev http server at %s", addr)
-		if err := http.ListenAndServe(addr, s.server); err != nil {
+		zlog.Info().Msgf("Starting dev http server at %s", s.config.ListenOn)
+		if err := http.ListenAndServe(s.config.ListenOn, s.server); err != nil {
 			zlog.Error().Err(err).Msg("")
 		}
 	})

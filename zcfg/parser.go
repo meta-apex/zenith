@@ -10,7 +10,7 @@ import (
 )
 
 // Parse parses the configuration into the given struct
-func (c *Config) Parse(v any) error {
+func (c *Config) Parse(v any, path string) error {
 	val := reflect.ValueOf(v)
 	if val.Kind() != reflect.Ptr || val.IsNil() {
 		return fmt.Errorf("target must be a non-nil pointer to struct")
@@ -21,11 +21,11 @@ func (c *Config) Parse(v any) error {
 		return fmt.Errorf("target must be a pointer to struct")
 	}
 
-	return c.parseStruct(val, c.data)
+	return c.parseStruct(val, c.data, path, false)
 }
 
 // parseStruct parses a struct value
-func (c *Config) parseStruct(val reflect.Value, curMap map[string]any) error {
+func (c *Config) parseStruct(val reflect.Value, curMap map[string]any, path string, optional bool) error {
 	typ := val.Type()
 
 	for i := 0; i < val.NumField(); i++ {
@@ -58,7 +58,7 @@ func (c *Config) parseStruct(val reflect.Value, curMap map[string]any) error {
 
 			if typeField.Anonymous {
 				// For embedded structs, use the same map
-				if err := c.parseStruct(structValue, curMap); err != nil {
+				if err := c.parseStruct(structValue, curMap, path, false); err != nil {
 					return err
 				}
 			} else {
@@ -67,15 +67,17 @@ func (c *Config) parseStruct(val reflect.Value, curMap map[string]any) error {
 				if !ok {
 					nestedMap = make(map[string]any)
 				}
-				if err := c.parseStruct(structValue, nestedMap); err != nil {
+				if err := c.parseStruct(structValue, nestedMap, joinPath(path, fieldName), opts.optional); err != nil {
 					return err
 				}
 			}
 			continue
 		}
 
+		opts.path = path
+		opts.parentOptional = optional
 		if err := c.parseField(field, fieldName, opts, curMap); err != nil {
-			return fmt.Errorf("%q: %w", typeField.Name, err)
+			return fmt.Errorf(`[%s%s]: %w`, path, fieldName, err)
 		}
 	}
 
@@ -97,6 +99,9 @@ func (c *Config) parseField(field reflect.Value, key string, opts tagOptions, cu
 			return nil
 		}
 		if !opts.hasDefault {
+			if opts.parentOptional {
+				return nil
+			}
 			return fmt.Errorf("required field is missing")
 		}
 		val = opts.defaultValue
@@ -254,7 +259,7 @@ func (c *Config) setField(field reflect.Value, val any, opts tagOptions) error {
 
 	case reflect.Struct:
 		if m, ok := val.(map[string]any); ok {
-			return c.parseStruct(field, m)
+			return c.parseStruct(field, m, opts.path, opts.optional)
 		}
 		return fmt.Errorf("cannot convert %T to struct", val)
 
@@ -263,4 +268,11 @@ func (c *Config) setField(field reflect.Value, val any, opts tagOptions) error {
 	}
 
 	return nil
+}
+
+func joinPath(path, sep string) string {
+	if path == "" {
+		return sep + "."
+	}
+	return path + sep + "."
 }

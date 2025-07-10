@@ -4,6 +4,8 @@ import (
 	"github.com/grafana/pyroscope-go"
 	"github.com/meta-apex/zenith/core/stat"
 	"github.com/meta-apex/zenith/core/threading"
+	"github.com/meta-apex/zenith/core/zproc"
+	"github.com/meta-apex/zenith/zlog"
 	"runtime"
 	"sync"
 	"time"
@@ -94,10 +96,10 @@ func Start(c Config) {
 	}
 
 	once.Do(func() {
-		logx.Info("continuous profiling started")
+		zlog.Info().Msg("continuous profiling started")
 
 		threading.GoSafe(func() {
-			startPyroscope(c, proc.Done())
+			startPyroscope(c, zproc.Done())
 		})
 	})
 }
@@ -122,13 +124,13 @@ func startPyroscope(c Config, done <-chan struct{}) {
 			if pr == nil && isCpuOverloaded(c) {
 				pr = newProfiler(c)
 				if err := pr.Start(); err != nil {
-					logx.Errorf("failed to start profiler: %v", err)
+					zlog.Error().Msgf("failed to start profiler: %v", err)
 					continue
 				}
 
 				// record the latest profiling time
 				latestProfilingTime = time.Now()
-				logx.Infof("pyroscope profiler started.")
+				zlog.Info().Msgf("pyroscope profiler started.")
 			}
 		case <-profilingTicker.C:
 			// check if the profiling duration has passed
@@ -139,13 +141,13 @@ func startPyroscope(c Config, done <-chan struct{}) {
 			// check if the profiler is already running, if so, skip
 			if pr != nil {
 				if err = pr.Stop(); err != nil {
-					logx.Errorf("failed to stop profiler: %v", err)
+					zlog.Error().Msgf("failed to stop profiler: %v", err)
 				}
-				logx.Infof("pyroscope profiler stopped.")
+				zlog.Info().Msgf("pyroscope profiler stopped.")
 				pr = nil
 			}
 		case <-done:
-			logx.Infof("continuous profiling stopped.")
+			zlog.Info().Msgf("continuous profiling stopped.")
 			return
 		}
 	}
@@ -167,10 +169,6 @@ func genPyroscopeConf(c Config) pyroscope.Config {
 		},
 	}
 
-	if c.ProfileType.Logger {
-		pConf.Logger = logx.WithCallerSkip(0)
-	}
-
 	if c.ProfileType.CPU {
 		pConf.ProfileTypes = append(pConf.ProfileTypes, pyroscope.ProfileCPU)
 	}
@@ -188,7 +186,7 @@ func genPyroscopeConf(c Config) pyroscope.Config {
 		pConf.ProfileTypes = append(pConf.ProfileTypes, pyroscope.ProfileBlockCount, pyroscope.ProfileBlockDuration)
 	}
 
-	logx.Infof("applicationName: %s", pConf.ApplicationName)
+	zlog.Info().Msgf("applicationName: %s", pConf.ApplicationName)
 
 	return pConf
 }
@@ -197,7 +195,7 @@ func genPyroscopeConf(c Config) pyroscope.Config {
 func isCpuOverloaded(c Config) bool {
 	currentValue := stat.CpuUsage()
 	if currentValue >= c.CpuThreshold {
-		logx.Infof("continuous profiling cpu overload, cpu: %d", currentValue)
+		zlog.Info().Msgf("continuous profiling cpu overload, cpu: %d", currentValue)
 		return true
 	}
 

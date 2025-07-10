@@ -1,7 +1,5 @@
 package metric
 
-import "github.com/meta-apex/zenith/core/prometheus"
-
 // A VectorOpts is a general configuration.
 type VectorOpts struct {
 	Namespace string
@@ -12,9 +10,5 @@ type VectorOpts struct {
 }
 
 func update(fn func()) {
-	if !prometheus.Enabled() {
-		return
-	}
-
 	fn()
 }

@@ -54,7 +54,7 @@ func Load(filename string, v any, opts ...Option) error {
 		c.buildCaseInsensitiveCache()
 	}
 
-	return c.Parse(v)
+	return c.Parse(v, "")
 }
 
 // LoadFromJsonBytes loads config into v from content json bytes.
@@ -69,7 +69,7 @@ func LoadFromJsonBytes(content []byte, v any, opts ...Option) error {
 		c.buildCaseInsensitiveCache()
 	}
 
-	return c.Parse(v)
+	return c.Parse(v, "")
 }
 
 // buildCaseInsensitiveCache rebuilds the case-insensitive cache
